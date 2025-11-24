@@ -1,95 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Saree Shop</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-    }
-    header {
-      padding: 20px;
-      text-align: center;
-      background: #7a001f;
-      color: white;
-    }
-    #productArea {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 20px;
-      padding: 25px;
-    }
-    .product-card {
-      background: white;
-      border-radius: 8px;
-      padding: 15px;
-      box-shadow: 0px 2px 6px rgba(0,0,0,.2);
-      text-align: center;
-    }
-    img {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      border-radius: 6px;
-    }
-    button {
-      margin-top: 10px;
-      padding: 8px 16px;
-      background: #7a001f;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 14px;
-    }
-  </style>
-</head>
-
-<body>
-<header>
-  <h1>Silk Saree Shop</h1>
-  <p>Premium Kanchipuram | Banarasi | Bridal</p>
-</header>
-
-<div id="productArea">
-  Loading sarees…
-</div>
-
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyi-0v150TEXg5a3i0vAg6KO6NMcBvIsPOfUa-jFYgSw3u6ItEphANbBkqzU_hLwMYlUQ/exec";  // <-- Replace this
+const API_URL = "https://script.google.com/macros/s/AKfycbyi-0v150TEXg5a3i0vAg6KO6NMcBvIsPOfUa-jFYgSw3u6ItEphANbBkqzU_hLwMYlUQ/exec?action=inventory";
+let cart = [];
 
+// fetch inventory list
 fetch(API_URL + "?action=inventory")
   .then(res => res.json())
   .then(data => {
     if (!data.ok) {
-      document.getElementById("productArea").innerHTML = "❌ Failed to load products";
+      document.getElementById('productArea').innerText = "Failed to load products";
       return;
     }
     renderProducts(data.inventory);
   })
   .catch(err => {
-    console.log(err);
-    document.getElementById("productArea").innerHTML = "❌ Error fetching product list";
+    document.getElementById('productArea').innerText = "Error loading products";
+    console.error(err);
   });
 
 function renderProducts(list) {
-  const box = document.getElementById("productArea");
-  box.innerHTML = "";
-
-  list.forEach(item => {
-    box.innerHTML += `
+  const div = document.getElementById('productArea');
+  div.innerHTML = "";
+  list.forEach(p => {
+    div.innerHTML += `
       <div class="product-card">
-        <img src="${item.image_url}" alt="${item.name}">
-        <h3>${item.name}</h3>
-        <p>₹${item.price}</p>
-        <p>${item.description}</p>
-        <button>Add to Cart</button>
+        <img src="${p.image_url || 'https://via.placeholder.com/300x200'}" alt="${p.name}">
+        <h3>${p.name}</h3>
+        <p>Price: ₹${p.price}</p>
+        <p>${p.description}</p>
+        <button onclick="addItem('${p.id}', '${p.name}', ${p.price})">Add to Cart</button>
       </div>
     `;
   });
 }
-</script>
 
-</body>
-</html>
+function addItem(id, name, price) {
+  const item = cart.find(x => x.id === id);
+  if (item) item.qty++;
+  else cart.push({id, name, price, qty:1});
+  alert("Added \"" + name + "\" to cart");
+}
+</script>
