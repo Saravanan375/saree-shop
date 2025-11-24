@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Silk Saree Store</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .product-card {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px;
+      width: 260px;
+      display: inline-block;
+      vertical-align: top;
+    }
+    img { width: 100%; height: auto; }
+    button {
+      padding: 8px 14px;
+      background: black;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<h1>✨ Silk Saree Shop ✨</h1>
+<div id="productArea">Loading sarees...</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyi-0v150TEXg5a3i0vAg6KO6NMcBvIsPOfUa-jFYgSw3u6ItEphANbBkqzU_hLwMYlUQ/exec
+"; // ← Replace here
+
+let cart = [];
+
+// Load inventory
+fetch(API_URL + "?action=inventory")
+  .then(res => res.json())
+  .then(data => {
+    if (!data.ok) return;
+    renderProducts(data.inventory);
+  });
+
+function renderProducts(list) {
+  const div = document.getElementById("productArea");
+  div.innerHTML = "";
+  list.forEach(p => {
+    div.innerHTML += `
+      <div class="product-card">
+        <img src="${p.image_url}">
+        <h3>${p.name}</h3>
+        <p>Price: ₹${p.price}</p>
+        <p>${p.description}</p>
+        <button onclick="addItem('${p.id}', '${p.name}', ${p.price})">Add to Cart</button>
+      </div>
+    `;
+  });
+}
+
+function addItem(id, name, price) {
+  const item = cart.find(x => x.id === id);
+  if (item) item.qty++;
+  else cart.push({id, name, price, qty:1});
+  alert("Added to cart");
+}
+</script>
+
+</body>
+</html>
