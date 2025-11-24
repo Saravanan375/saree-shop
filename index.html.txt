@@ -1,5 +1,5 @@
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyi-0v150TEXg5a3i0vAg6KO6NMcBvIsPOfUa-jFYgSw3u6ItEphANbBkqzU_hLwMYlUQ/exec?action=inventory";
+const API_URL = "https://script.google.com/macros/s/AKfycbx2dhgXkstkMwrCVbF3fSLvp38YPYD1JWb6vvxhocsi04Tvd4Nyv8RITmARhmhwK8xceQ/exec";
 let cart = [];
 
 // fetch inventory list
@@ -40,3 +40,4 @@ function addItem(id, name, price) {
   alert("Added \"" + name + "\" to cart");
 }
 </script>
+
